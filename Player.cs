@@ -12,10 +12,10 @@ namespace FInal_Summative
 {
     internal class Player
     {
+        
         Texture2D texture;
 
         private Rectangle _location;
-        private float _acceleration = 1.05f;
 
 
         Vector2 velocity;
@@ -28,23 +28,14 @@ namespace FInal_Summative
             texture = newTexture;
             position = newPosition;
             hasJumped = true;
-        }
-
-
-        public Rectangle CollisonRectangle 
-        {
-            get { return _location; }
-            set { _location = value; }
-        }
-
-        public bool CollisionCollide(Rectangle item)
-        {
-            return _location.Intersects(item);
+            _location = new Rectangle(newPosition.ToPoint(), new Point(newTexture.Width, newTexture.Height));
+            position = new Vector2(0, 401);
         }
 
         public void Update(GameTime gameTime, List<Rectangle> barriers)
         {
-            //position += velocity;
+           
+            // Horizontal Movement
             velocity.X = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) 
                 velocity.X += 3f;
@@ -52,41 +43,59 @@ namespace FInal_Summative
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) 
                 velocity.X += -3f;
 
-            
             position.X += velocity.X;
-
-            foreach (Rectangle barrier in barriers)
-            {
-                if (this.CollisionCollide(barrier))
-                {
-                    position.X -= velocity.X;
-                }
-            }
             _location.Location = position.ToPoint();
 
+            foreach (Rectangle barrier in barriers)
+                if (_location.Intersects(barrier))
+                {
+                    position.X -= velocity.X;
+                    _location.Location = position.ToPoint();
+                    break;
+                }
+
+
+            // Vertical Movement
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
             {
-                position.Y -= 10f;
+                //position.Y -= 10f;
                 velocity.Y = -5f;
                 hasJumped = true;
-            }
+            }           
+            velocity.Y += 0.20f;
+            
 
-            if (hasJumped == true)
-            {
-                float i = 0;
-                velocity.Y += 0.20f + i;
-            }
+           
 
-            if (position.Y + texture.Height >= 450)
-            {
-                hasJumped = false;
-            }
+            
 
-            if(hasJumped == false)
-            {
-                velocity.Y = 0f;
-            }
+            position.Y += velocity.Y;
+            _location.Location = position.ToPoint();
+
+            foreach (Rectangle barrier in barriers)
+                if (_location.Intersects(barrier))
+                {
+                    // hit bottom
+                    if (velocity.Y < 0)
+                    {
+                        position.Y -= velocity.Y;
+                        velocity.Y = 0;
+                        _location.Location = position.ToPoint();
+
+                    }
+                    // land on
+                    else
+                    {
+                        hasJumped = false;
+                        position.Y -= velocity.Y;
+                        velocity.Y = 0;
+                        _location.Location = position.ToPoint();
+
+                    }
+                }
+
+
 
 
         }
@@ -95,5 +104,5 @@ namespace FInal_Summative
         {
             spriteBatch.Draw(texture,position, Color.White);
         }
-    }
+}
 }

@@ -13,8 +13,6 @@ namespace FInal_Summative
         Player player;
         Texture2D barrierTexture;
         List<Rectangle> barriers;
-        Texture2D character;
-        Rectangle characterLoc;
         KeyboardState keyboardState;
 
         public Game1()
@@ -28,7 +26,6 @@ namespace FInal_Summative
         {
             // TODO: Add your initialization logic here
 
-           // barrierRect1 = new Rectangle(300, 400, 100, 50);
             base.Initialize();
 
             barriers = new List<Rectangle>();
@@ -39,7 +36,7 @@ namespace FInal_Summative
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player = new Player(Content.Load<Texture2D>("marioTextureStand"), new Vector2(50, 50));
-            barrierTexture = Content.Load<Texture2D>("gold");
+            barrierTexture = Content.Load<Texture2D>("Brick1");
 
             // TODO: use this.Content to load your game content here
         }
@@ -62,7 +59,8 @@ namespace FInal_Summative
 
         public void barriersAdd()
         {
-            barriers.Add(new Rectangle(300, 400, 100, 50));
+            barriers.Add(new Rectangle(0, 390,600,10));
+            barriers.Add(new Rectangle(0, 450, 800, 10));
         }
 
         protected override void Draw(GameTime gameTime)
@@ -75,7 +73,6 @@ namespace FInal_Summative
             foreach (Rectangle barrier in barriers)
                 _spriteBatch.Draw(barrierTexture, barrier, Color.Black);
 
-            // _spriteBatch.Draw(barrierTexture, barrierRect1, Color.Black);
             _spriteBatch.End();
 
             // TODO: Add your drawing code here
