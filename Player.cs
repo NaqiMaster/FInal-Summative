@@ -17,7 +17,6 @@ namespace FInal_Summative
 
         private Rectangle _location;
 
-
         Vector2 velocity;
         Vector2 position;
 
@@ -28,11 +27,11 @@ namespace FInal_Summative
             texture = newTexture;
             position = newPosition;
             hasJumped = true;
-            _location = new Rectangle(newPosition.ToPoint(), new Point(newTexture.Width, newTexture.Height));
-            position = new Vector2(0, 401);
+            _location = new Rectangle(newPosition.ToPoint(), new Point(14, 42));
+            position = new Vector2(0, 387);
         }
 
-        public void Update(GameTime gameTime, List<Rectangle> barriers)
+        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins)
         {
            
             // Horizontal Movement
@@ -54,10 +53,18 @@ namespace FInal_Summative
                     break;
                 }
 
+            for (int i = 0; i < coins.Count; i++)
+            {                 
+                if (_location.Intersects(coins[i]))
+                {
+                    coins.RemoveAt(i);
+                    i--;
+                }
+            }
 
-            // Vertical Movement
+                    // Vertical Movement
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
+                    if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
             {
                 //position.Y -= 10f;
                 velocity.Y = -5f;
@@ -102,7 +109,7 @@ namespace FInal_Summative
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture,position, Color.White);
+            spriteBatch.Draw(texture, _location, Color.White);
         }
 }
 }

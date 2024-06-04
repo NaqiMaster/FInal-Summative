@@ -12,15 +12,18 @@ namespace FInal_Summative
         private SpriteBatch _spriteBatch;
 
         Player player;
-        Texture2D barrierTexture;
+        Texture2D barrierTexture, coinTexture, fireboySpritesheet;
         List<Rectangle> barriers;
-        KeyboardState keyboardState;
+        List<Rectangle> coins;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 460;
         }
 
         protected override void Initialize()
@@ -28,6 +31,11 @@ namespace FInal_Summative
             // TODO: Add your initialization logic here
 
             base.Initialize();
+            this.Window.Title = "BoxBoy & BoxGirl";
+
+
+            coins = new List<Rectangle>();
+            coinsAdd();
 
             barriers = new List<Rectangle>();
             barriersAdd();
@@ -38,8 +46,18 @@ namespace FInal_Summative
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            player = new Player(Content.Load<Texture2D>("Brick1"), new Vector2(50, 50));
             barrierTexture = Content.Load<Texture2D>("gold");
+            coinTexture = Content.Load<Texture2D>("GoldCoin");
+            fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
+
+            Rectangle sourceRect = new Rectangle(16,17,35,63);
+            Texture2D cropTexture = new Texture2D(GraphicsDevice, sourceRect.Width, sourceRect.Height);
+            Color[] data = new Color[sourceRect.Width * sourceRect.Height];
+            fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
+            cropTexture.SetData(data);
+
+            player = new Player(cropTexture, new Vector2(0, 0));
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -48,8 +66,7 @@ namespace FInal_Summative
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            this.Window.Title = "Number of barriers: " + barriers.Count;
-            player.Update(gameTime,barriers);
+            player.Update(gameTime,barriers,coins);
 
 
 
@@ -58,14 +75,42 @@ namespace FInal_Summative
 
             base.Update(gameTime);
         }
+        public void coinsAdd()
+        {
+            coins.Add(new Rectangle(450,410,20,20));//1st
+            coins.Add(new Rectangle(200,410, 20, 20));//2nd
+            coins.Add(new Rectangle(780, 400, 20, 20));//3rd
+            coins.Add(new Rectangle(780, 330, 20, 20));//4th
+            coins.Add(new Rectangle(570, 330, 20, 20));//5th
+            coins.Add(new Rectangle(320, 330, 20, 20));//6th
+            coins.Add(new Rectangle(10, 210, 20, 20));//6th
+
+
+
+        }
 
         public void barriersAdd()
         {
+            //Parkour Part
+            barriers.Add(new Rectangle(500, 200, 20, 10));
+            barriers.Add(new Rectangle(550, 180, 10, 10));
+            barriers.Add(new Rectangle(600, 150, 10, 10));
+            barriers.Add(new Rectangle(750, 110, 10, 10));
+            barriers.Add(new Rectangle(790, 50, 10, 10));
+            barriers.Add(new Rectangle(500,45,200,10));
+
+
+
+
+
+            //4th Floor
+            barriers.Add(new Rectangle(0, 180, 500, 10));
+
             //3rd Floor
             barriers.Add(new Rectangle(0, 250, 50, 10));
             barriers.Add(new Rectangle(72, 250, 622, 10));
-            barriers.Add(new Rectangle(750, 250, 150, 10));
-            barriers.Add(new Rectangle(500, 170, 10, 80));
+            barriers.Add(new Rectangle(770, 250, 150, 10));
+            barriers.Add(new Rectangle(500,45, 10, 215));
 
 
 
@@ -77,11 +122,16 @@ namespace FInal_Summative
             //2nd Floor
             barriers.Add(new Rectangle(0, 370,700,10));
 
-            //1st Floor
-            barriers.Add(new Rectangle(0, 450, 800, 10));
-
             //Box on Floor
             barriers.Add(new Rectangle(780, 430, 20, 20));
+
+            //Outline
+            barriers.Add(new Rectangle(0, 450, 800, 10));//Bottom
+            barriers.Add(new Rectangle(0, 0, 0, 460));//LeftSide
+            barriers.Add(new Rectangle(800, 0,0, 460));//RightSide
+            barriers.Add(new Rectangle(0, 0, 800,0));//Top
+
+
         }
 
         protected override void Draw(GameTime gameTime)
@@ -93,6 +143,10 @@ namespace FInal_Summative
 
             foreach (Rectangle barrier in barriers)
                 _spriteBatch.Draw(barrierTexture, barrier, Color.White);
+
+            foreach (Rectangle coin in coins)
+                _spriteBatch.Draw(coinTexture, coin, Color.White);
+
 
             _spriteBatch.End();
 
