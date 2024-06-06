@@ -14,42 +14,43 @@ namespace FInal_Summative
     {
         
         Texture2D texture;
+        private List<Texture2D> _boyTextures;
 
         private Rectangle _location;
 
-        Vector2 velocity;
-        Vector2 position;
+        Vector2 _velocity;
+        Vector2 _position;
 
         bool hasJumped;
 
-        public Player(Texture2D newTexture,Vector2 newPosition)
+        public Player(List<Texture2D> boyTexture, Vector2 newPosition)
         {
-            texture = newTexture;
-            position = newPosition;
+            _boyTextures = boyTexture;
+            _position = newPosition;
             hasJumped = true;
             _location = new Rectangle(newPosition.ToPoint(), new Point(14, 42));
-            position = new Vector2(0, 387);
+            _position = new Vector2(0, 387);
         }
 
         public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins)
         {
            
             // Horizontal Movement
-            velocity.X = 0;
+            _velocity.X = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) 
-                velocity.X += 3f;
+                _velocity.X += 3f;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left)) 
-                velocity.X += -3f;
+                _velocity.X += -3f;
 
-            position.X += velocity.X;
-            _location.Location = position.ToPoint();
+            _position.X += _velocity.X;
+            _location.Location = _position.ToPoint();
 
             foreach (Rectangle barrier in barriers)
                 if (_location.Intersects(barrier))
                 {
-                    position.X -= velocity.X;
-                    _location.Location = position.ToPoint();
+                    _position.X -= _velocity.X;
+                    _location.Location = _position.ToPoint();
                     break;
                 }
 
@@ -67,37 +68,37 @@ namespace FInal_Summative
                     if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
             {
                 //position.Y -= 10f;
-                velocity.Y = -5f;
+                _velocity.Y = -5f;
                 hasJumped = true;
             }           
-            velocity.Y += 0.20f;
+            _velocity.Y += 0.20f;
             
 
            
 
             
 
-            position.Y += velocity.Y;
-            _location.Location = position.ToPoint();
+            _position.Y += _velocity.Y;
+            _location.Location = _position.ToPoint();
 
             foreach (Rectangle barrier in barriers)
                 if (_location.Intersects(barrier))
                 {
                     // hit bottom
-                    if (velocity.Y < 0)
+                    if (_velocity.Y < 0)
                     {
-                        position.Y -= velocity.Y;
-                        velocity.Y = 0;
-                        _location.Location = position.ToPoint();
+                        _position.Y -= _velocity.Y;
+                        _velocity.Y = 0;
+                        _location.Location = _position.ToPoint();
 
                     }
                     // land on
                     else
                     {
                         hasJumped = false;
-                        position.Y -= velocity.Y;
-                        velocity.Y = 0;
-                        _location.Location = position.ToPoint();
+                        _position.Y -= _velocity.Y;
+                        _velocity.Y = 0;
+                        _location.Location = _position.ToPoint();
 
                     }
                 }
@@ -109,7 +110,7 @@ namespace FInal_Summative
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, _location, Color.White);
+            spriteBatch.Draw(_boyTextures[3], _location, Color.White);
         }
 }
 }

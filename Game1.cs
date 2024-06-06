@@ -15,6 +15,8 @@ namespace FInal_Summative
         Texture2D barrierTexture, coinTexture, fireboySpritesheet;
         List<Rectangle> barriers;
         List<Rectangle> coins;
+        List<Texture2D> boyTexture;
+        int playerIndex;
 
         public Game1()
         {
@@ -29,18 +31,20 @@ namespace FInal_Summative
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            base.Initialize();
             this.Window.Title = "BoxBoy & BoxGirl";
 
+            boyTexture = new List<Texture2D>();
+            playerIndex = 0;
+
+            base.Initialize();
+           
+            
 
             coins = new List<Rectangle>();
             coinsAdd();
 
             barriers = new List<Rectangle>();
             barriersAdd();
-
-
         }
 
         protected override void LoadContent()
@@ -48,16 +52,29 @@ namespace FInal_Summative
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             barrierTexture = Content.Load<Texture2D>("gold");
             coinTexture = Content.Load<Texture2D>("GoldCoin");
-            fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
+            fireboySpritesheet = Content.Load<Texture2D>("boySpriteTOP");
 
-            Rectangle sourceRect = new Rectangle(16,17,35,63);
-            Texture2D cropTexture = new Texture2D(GraphicsDevice, sourceRect.Width, sourceRect.Height);
-            Color[] data = new Color[sourceRect.Width * sourceRect.Height];
-            fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
-            cropTexture.SetData(data);
+            Texture2D cropTexture;
+            Rectangle sourceRect;
 
-            player = new Player(cropTexture, new Vector2(0, 0));
+            int width = fireboySpritesheet.Width / 12;
+            int height = fireboySpritesheet.Height / 2;
 
+            for (int y = 0; y < 2; y++) // Loops through each row
+                for (int x = 0; x < 12; x++) // Loops through each card in a row
+                {
+                    sourceRect = new Rectangle(x * width, y * height, width, height);
+                    cropTexture = new Texture2D(GraphicsDevice, width, height);
+                    Color[] data = new Color[width * height];
+                    fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
+                    cropTexture.SetData(data);
+
+                    //if (boyTexture.Count < 24)
+                    boyTexture.Add(cropTexture);
+                }
+
+
+            player = new Player(boyTexture, new Vector2(0, 0));
 
             // TODO: use this.Content to load your game content here
         }
@@ -67,7 +84,6 @@ namespace FInal_Summative
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             player.Update(gameTime,barriers,coins);
-
 
 
 
@@ -95,7 +111,7 @@ namespace FInal_Summative
             barriers.Add(new Rectangle(500, 200, 20, 10));
             barriers.Add(new Rectangle(550, 180, 10, 10));
             barriers.Add(new Rectangle(600, 150, 10, 10));
-            barriers.Add(new Rectangle(750, 110, 10, 10));
+            barriers.Add(new Rectangle(730, 110, 10, 10));
             barriers.Add(new Rectangle(790, 50, 10, 10));
             barriers.Add(new Rectangle(500,45,200,10));
 
