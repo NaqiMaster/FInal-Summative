@@ -21,6 +21,8 @@ namespace FInal_Summative
         Vector2 _velocity;
         Vector2 _position;
 
+        private int playerIndex = 0;
+
         bool hasJumped;
 
         public Player(List<Texture2D> boyTexture, Vector2 newPosition)
@@ -28,20 +30,27 @@ namespace FInal_Summative
             _boyTextures = boyTexture;
             _position = newPosition;
             hasJumped = true;
-            _location = new Rectangle(newPosition.ToPoint(), new Point(14, 42));
+            _location = new Rectangle(newPosition.ToPoint(), new Point(20, 60));
             _position = new Vector2(0, 387);
         }
 
         public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins)
         {
-           
+            texture = _boyTextures[playerIndex];
             // Horizontal Movement
             _velocity.X = 0;
-            if (Keyboard.GetState().IsKeyDown(Keys.Right)) 
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
                 _velocity.X += 3f;
+                playerIndex = 21;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Left)) 
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
                 _velocity.X += -3f;
+                playerIndex = 12;
+            }
 
             _position.X += _velocity.X;
             _location.Location = _position.ToPoint();
@@ -70,6 +79,7 @@ namespace FInal_Summative
                 //position.Y -= 10f;
                 _velocity.Y = -5f;
                 hasJumped = true;
+                playerIndex = 24;
             }           
             _velocity.Y += 0.20f;
             
@@ -110,7 +120,7 @@ namespace FInal_Summative
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_boyTextures[3], _location, Color.White);
+            spriteBatch.Draw(_boyTextures[playerIndex], _location, Color.White);
         }
 }
 }

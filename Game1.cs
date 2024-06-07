@@ -52,7 +52,7 @@ namespace FInal_Summative
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             barrierTexture = Content.Load<Texture2D>("gold");
             coinTexture = Content.Load<Texture2D>("GoldCoin");
-            fireboySpritesheet = Content.Load<Texture2D>("boySpriteTOP");
+            fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
 
             Texture2D cropTexture;
             Rectangle sourceRect;
@@ -69,12 +69,20 @@ namespace FInal_Summative
                     fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
                     cropTexture.SetData(data);
 
-                    //if (boyTexture.Count < 24)
+                    if (boyTexture.Count < 24)
                     boyTexture.Add(cropTexture);
                 }
 
+            Rectangle sourceRect1 = new Rectangle(120, 258, 159-120, 315-258);
+            cropTexture = new Texture2D(GraphicsDevice, width, height);
+            Color[] data1 = new Color[width * height];
+            fireboySpritesheet.GetData(0, sourceRect1, data1, 0, data1.Length);
+            cropTexture.SetData(data1);
+
+            boyTexture.Add(cropTexture);
 
             player = new Player(boyTexture, new Vector2(0, 0));
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -156,6 +164,8 @@ namespace FInal_Summative
 
             _spriteBatch.Begin();
             player.Draw(_spriteBatch);
+
+
 
             foreach (Rectangle barrier in barriers)
                 _spriteBatch.Draw(barrierTexture, barrier, Color.White);
