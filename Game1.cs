@@ -50,36 +50,41 @@ namespace FInal_Summative
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            barrierTexture = Content.Load<Texture2D>("gold");
+            barrierTexture = Content.Load<Texture2D>("Grass");
             coinTexture = Content.Load<Texture2D>("GoldCoin");
             fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
 
             Texture2D cropTexture;
-            Rectangle sourceRect;
 
-            int width = fireboySpritesheet.Width / 12;
-            int height = fireboySpritesheet.Height / 2;
+            //Default Stand Index 0
+            Rectangle sourceRect2 = new Rectangle(152, 17, 187 - 152, 80 - 17);
+            cropTexture = new Texture2D(GraphicsDevice, sourceRect2.Width, sourceRect2.Height);
+            Color[] data2 = new Color[sourceRect2.Width * sourceRect2.Height];
+            fireboySpritesheet.GetData(0, sourceRect2, data2, 0, data2.Length);
+            cropTexture.SetData(data2);
 
-            for (int y = 0; y < 2; y++) // Loops through each row
-                for (int x = 0; x < 12; x++) // Loops through each card in a row
-                {
-                    sourceRect = new Rectangle(x * width, y * height, width, height);
-                    cropTexture = new Texture2D(GraphicsDevice, width, height);
-                    Color[] data = new Color[width * height];
-                    fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
-                    cropTexture.SetData(data);
+            boyTexture.Add(cropTexture);
 
-                    if (boyTexture.Count < 24)
-                    boyTexture.Add(cropTexture);
-                }
+            //Jump Index 1
+            Rectangle sourceRect = new Rectangle(120, 259,160-120, 315-259);
+            cropTexture = new Texture2D(GraphicsDevice, sourceRect.Width, sourceRect.Height);
+            Color[] data = new Color[sourceRect.Width * sourceRect.Height];
+            fireboySpritesheet.GetData(0, sourceRect, data, 0, data.Length);
+            cropTexture.SetData(data);
 
-            Rectangle sourceRect1 = new Rectangle(120, 258, 159-120, 315-258);
-            cropTexture = new Texture2D(GraphicsDevice, width, height);
-            Color[] data1 = new Color[width * height];
+            boyTexture.Add(cropTexture);
+
+            //Run Index 2
+            Rectangle sourceRect1 = new Rectangle(366,99, 411-366, 155-99);
+            cropTexture = new Texture2D(GraphicsDevice, sourceRect1.Width, sourceRect1.Height);
+            Color[] data1 = new Color[sourceRect1.Width * sourceRect1.Height];
             fireboySpritesheet.GetData(0, sourceRect1, data1, 0, data1.Length);
             cropTexture.SetData(data1);
 
             boyTexture.Add(cropTexture);
+
+
+
 
             player = new Player(boyTexture, new Vector2(0, 0));
 
