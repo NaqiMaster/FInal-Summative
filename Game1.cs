@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq.Expressions;
 
 namespace FInal_Summative
@@ -12,12 +13,22 @@ namespace FInal_Summative
         private SpriteBatch _spriteBatch;
 
         Player player;
-        Texture2D barrierTexture, coinTexture, fireboySpritesheet;
+        Texture2D barrierTexture, coinTexture, fireboySpritesheet, introBackground, level1Background;
         List<Rectangle> barriers;
         List<Rectangle> coins;
         List<Texture2D> boyTexture;
-        int playerIndex;
+        Rectangle window, playerr;
 
+        enum Screen
+        {
+            Intro,
+            Instructions,
+            Level1,
+            Credits,
+            deathScreen
+        }
+
+        Screen screen;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,11 +42,15 @@ namespace FInal_Summative
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 460;
+            window = new Rectangle(0,0,_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            playerr = new Rectangle(20, 200, 100, 200);
             this.Window.Title = "BoxBoy & BoxGirl";
+            screen = Screen.Level1;
 
             boyTexture = new List<Texture2D>();
-            playerIndex = 0;
-
             base.Initialize();
            
             
@@ -50,9 +65,11 @@ namespace FInal_Summative
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            barrierTexture = Content.Load<Texture2D>("Grass");
+            barrierTexture = Content.Load<Texture2D>("whiteBackground");
             coinTexture = Content.Load<Texture2D>("GoldCoin");
             fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
+            introBackground = Content.Load<Texture2D>("introBackground");
+            level1Background = Content.Load<Texture2D>("whiteBackground");
 
             Texture2D cropTexture;
 
@@ -96,7 +113,14 @@ namespace FInal_Summative
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            player.Update(gameTime,barriers,coins);
+            if (screen == Screen.Intro)
+            {
+
+            }
+            else if (screen == Screen.Level1)
+            {
+                player.Update(gameTime, barriers, coins);
+            }
 
 
 
@@ -126,7 +150,7 @@ namespace FInal_Summative
             barriers.Add(new Rectangle(600, 150, 10, 10));
             barriers.Add(new Rectangle(730, 110, 10, 10));
             barriers.Add(new Rectangle(790, 50, 10, 10));
-            barriers.Add(new Rectangle(500,45,200,10));
+            barriers.Add(new Rectangle(500,50,200,10));
 
 
 
@@ -139,7 +163,7 @@ namespace FInal_Summative
             barriers.Add(new Rectangle(0, 250, 50, 10));
             barriers.Add(new Rectangle(72, 250, 622, 10));
             barriers.Add(new Rectangle(770, 250, 150, 10));
-            barriers.Add(new Rectangle(500,45, 10, 215));
+            barriers.Add(new Rectangle(500,50, 10, 210));
 
 
 
@@ -168,15 +192,23 @@ namespace FInal_Summative
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            player.Draw(_spriteBatch);
 
+            if (screen == Screen.Intro)
+            {
+                _spriteBatch.Draw(introBackground, window, Color.White);
+                _spriteBatch.Draw(boyTexture[0],playerr, Color.Black);
+            }
+            else if (screen == Screen.Level1)
+            {
+                _spriteBatch.Draw(level1Background, window, Color.White);
+                player.Draw(_spriteBatch);
 
+                foreach (Rectangle barrier in barriers)
+                    _spriteBatch.Draw(barrierTexture, barrier, Color.Black);
 
-            foreach (Rectangle barrier in barriers)
-                _spriteBatch.Draw(barrierTexture, barrier, Color.White);
-
-            foreach (Rectangle coin in coins)
-                _spriteBatch.Draw(coinTexture, coin, Color.White);
+                foreach (Rectangle coin in coins)
+                    _spriteBatch.Draw(coinTexture, coin, Color.Purple);
+            }
 
 
             _spriteBatch.End();

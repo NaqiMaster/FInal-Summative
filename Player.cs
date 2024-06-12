@@ -27,6 +27,8 @@ namespace FInal_Summative
 
         bool hasJumped;
 
+
+
         public Player(List<Texture2D> boyTexture, Vector2 newPosition)
         {
             _boyTextures = boyTexture;
@@ -145,7 +147,7 @@ namespace FInal_Summative
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_boyTextures[playerIndex], _location, null, Color.White, 0f, Vector2.Zero, _spriteEffect, 1f);
+            spriteBatch.Draw(_boyTextures[playerIndex], _location, null, Color.Black, 0f, Vector2.Zero, _spriteEffect, 1f);
         }
 }
 }
