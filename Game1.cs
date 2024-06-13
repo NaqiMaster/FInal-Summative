@@ -17,12 +17,15 @@ namespace FInal_Summative
         List<Rectangle> barriers;
         List<Rectangle> coins;
         List<Texture2D> boyTexture;
-        Rectangle window, playerr;
+        Rectangle window, playerr, btnInstructions, btnLevelChoose, buttonLevel1, btnCredits;
+        SpriteFont titleIntro, textChooseLevel, textLevel1, textCredits, textInstructions;
+        MouseState mouseState;
 
         enum Screen
         {
             Intro,
             Instructions,
+            ChooseLevel,
             Level1,
             Credits,
             deathScreen
@@ -46,9 +49,14 @@ namespace FInal_Summative
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 460;
             window = new Rectangle(0,0,_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-            playerr = new Rectangle(20, 200, 100, 200);
+            playerr = new Rectangle(270, 150, 200, 300);
             this.Window.Title = "BoxBoy & BoxGirl";
-            screen = Screen.Level1;
+            screen = Screen.Intro;
+
+            btnInstructions = new Rectangle(540, 380, 200, 50);
+            btnCredits = new Rectangle(540, 300, 200, 50);
+            btnLevelChoose = new Rectangle(40, 300, 200, 130);
+
 
             boyTexture = new List<Texture2D>();
             base.Initialize();
@@ -68,8 +76,10 @@ namespace FInal_Summative
             barrierTexture = Content.Load<Texture2D>("whiteBackground");
             coinTexture = Content.Load<Texture2D>("GoldCoin");
             fireboySpritesheet = Content.Load<Texture2D>("boySprite1");
-            introBackground = Content.Load<Texture2D>("introBackground");
+            introBackground = Content.Load<Texture2D>("whiteBackground");
             level1Background = Content.Load<Texture2D>("whiteBackground");
+            titleIntro = Content.Load<SpriteFont>("titleIntro");
+            textChooseLevel = Content.Load<SpriteFont>("textChooseLevel");
 
             Texture2D cropTexture;
 
@@ -111,12 +121,26 @@ namespace FInal_Summative
 
         protected override void Update(GameTime gameTime)
         {
+            mouseState = Mouse.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Intro)
             {
-
-            }
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (btnLevelChoose.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Level1;
+                    }
+                    else if (btnCredits.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Credits;
+                    }
+                    else if (btnInstructions.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Instructions;
+                    }
+            } }
             else if (screen == Screen.Level1)
             {
                 player.Update(gameTime, barriers, coins);
@@ -195,8 +219,21 @@ namespace FInal_Summative
 
             if (screen == Screen.Intro)
             {
-                _spriteBatch.Draw(introBackground, window, Color.White);
-                _spriteBatch.Draw(boyTexture[0],playerr, Color.Black);
+                _spriteBatch.Draw(introBackground, window, Color.Black);
+
+                _spriteBatch.Draw(boyTexture[0], playerr, Color.FloralWhite);
+                _spriteBatch.DrawString(titleIntro, "S  h  a  d  o  w  B  o  y", new Vector2(100, 30), Color.White);
+
+                //Btn Instructions, Btn Credits, Btn LevelChoose
+                _spriteBatch.Draw(introBackground, btnInstructions, Color.White);
+                _spriteBatch.Draw(introBackground, btnCredits, Color.White);
+                _spriteBatch.Draw(introBackground, btnLevelChoose, Color.White);
+
+                _spriteBatch.DrawString(textChooseLevel, "CHOOSE", new Vector2(70, 320), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "LEVEL", new Vector2(70, 360), Color.Black);
+
+
+
             }
             else if (screen == Screen.Level1)
             {
