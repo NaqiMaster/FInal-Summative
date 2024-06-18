@@ -13,7 +13,7 @@ namespace FInal_Summative
     internal class Player
     {
         
-        Texture2D texture;
+        Texture2D _textureDoor;
         private List<Texture2D> _boyTextures;
 
         private Rectangle _location;
@@ -29,9 +29,10 @@ namespace FInal_Summative
 
 
 
-        public Player(List<Texture2D> boyTexture, Vector2 newPosition)
+        public Player(List<Texture2D> boyTexture, Vector2 newPosition)//, Texture2D textureDoor
         {
             _boyTextures = boyTexture;
+        //    _textureDoor = textureDoor;
             _position = newPosition;
             hasJumped = true;
             _location = new Rectangle(newPosition.ToPoint(), new Point(15, 50));
@@ -43,7 +44,6 @@ namespace FInal_Summative
         {
             playerIndex = 0;
 
-            texture = _boyTextures[playerIndex];
             // Horizontal Movement
             _velocity.X = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
@@ -109,13 +109,8 @@ namespace FInal_Summative
                 hasJumped = true;
             }
             _velocity.Y += 0.20f;
-            
 
-           
-
-            
-
-            _position.Y += _velocity.Y;
+                _position.Y += _velocity.Y;
             _location.Location = _position.ToPoint();
 
             foreach (Rectangle barrier in barriers)
@@ -148,6 +143,7 @@ namespace FInal_Summative
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_boyTextures[playerIndex], _location, null, Color.Black, 0f, Vector2.Zero, _spriteEffect, 1f);
+          //  spriteBatch.Draw(_textureDoor, new Vector2(50, 200),Color.White);
         }
 }
 }

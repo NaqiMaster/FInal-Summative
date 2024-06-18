@@ -13,11 +13,11 @@ namespace FInal_Summative
         private SpriteBatch _spriteBatch;
 
         Player player;
-        Texture2D barrierTexture, coinTexture, fireboySpritesheet, introBackground, level1Background;
+        Texture2D barrierTexture, coinTexture, fireboySpritesheet, introBackground, level1Background, textureDoor;
         List<Rectangle> barriers;
         List<Rectangle> coins;
         List<Texture2D> boyTexture;
-        Rectangle window, playerr, btnInstructions, btnLevelChoose, buttonLevel1, btnCredits;
+        Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits;
         SpriteFont titleIntro, textChooseLevel, textLevel1, textCredits, textInstructions;
         MouseState mouseState;
 
@@ -27,6 +27,8 @@ namespace FInal_Summative
             Instructions,
             ChooseLevel,
             Level1,
+            Level2,
+            Level3,
             Credits,
             deathScreen
         }
@@ -56,6 +58,11 @@ namespace FInal_Summative
             btnInstructions = new Rectangle(540, 380, 200, 50);
             btnCredits = new Rectangle(540, 300, 200, 50);
             btnLevelChoose = new Rectangle(40, 300, 200, 130);
+            btnLevel1 = new Rectangle(50, 100, 200, 300);
+            btnLevel2 = new Rectangle(300, 100, 200, 300);
+            btnLevel3 = new Rectangle(550, 100, 200, 300);
+
+
 
 
             boyTexture = new List<Texture2D>();
@@ -130,7 +137,7 @@ namespace FInal_Summative
                 {
                     if (btnLevelChoose.Contains(mouseState.X, mouseState.Y))
                     {
-                        screen = Screen.Level1;
+                        screen = Screen.ChooseLevel;
                     }
                     else if (btnCredits.Contains(mouseState.X, mouseState.Y))
                     {
@@ -140,7 +147,26 @@ namespace FInal_Summative
                     {
                         screen = Screen.Instructions;
                     }
-            } }
+            }   }
+            if (screen == Screen.ChooseLevel)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (btnLevel1.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Level1;
+                    }
+                    else if (btnLevel2.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Level2;
+                    }
+                    if (btnLevel3.Contains(mouseState.X, mouseState.Y))
+                    {
+                        screen = Screen.Level3;
+                    }
+                }
+            }
+
             else if (screen == Screen.Level1)
             {
                 player.Update(gameTime, barriers, coins);
@@ -229,8 +255,11 @@ namespace FInal_Summative
                 _spriteBatch.Draw(introBackground, btnCredits, Color.White);
                 _spriteBatch.Draw(introBackground, btnLevelChoose, Color.White);
 
-                _spriteBatch.DrawString(textChooseLevel, "CHOOSE", new Vector2(70, 320), Color.Black);
-                _spriteBatch.DrawString(textChooseLevel, "LEVEL", new Vector2(70, 360), Color.Black);
+
+                _spriteBatch.DrawString(textChooseLevel,"CREDITS",new Vector2(560,300),Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "RULES", new Vector2(570, 380), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "CHOOSE", new Vector2(75, 320), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "LEVEL", new Vector2(80, 360), Color.Black);
 
 
 
@@ -245,6 +274,26 @@ namespace FInal_Summative
 
                 foreach (Rectangle coin in coins)
                     _spriteBatch.Draw(coinTexture, coin, Color.Purple);
+            }
+            else if (screen == Screen.ChooseLevel)
+            {
+                _spriteBatch.Draw(level1Background, window, Color.Black);
+
+                _spriteBatch.Draw(introBackground, btnLevel1, Color.White);
+                _spriteBatch.DrawString(textChooseLevel, "1", new Vector2(140, 150), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "EASY", new Vector2(100, 300), Color.Black);
+
+
+                _spriteBatch.Draw(introBackground, btnLevel2, Color.White);
+                _spriteBatch.DrawString(textChooseLevel, "2", new Vector2(390, 150), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "MEDIUM", new Vector2(322, 300), Color.Black);
+
+
+                _spriteBatch.Draw(introBackground, btnLevel3, Color.White);
+                _spriteBatch.DrawString(textChooseLevel, "3", new Vector2(640, 150), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "HARD", new Vector2(600, 300), Color.Black);
+
+
             }
 
 
