@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:boySprite1.png
 
+#begin door.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:door.png
+
 #begin GoldCoin.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,6 +48,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GoldCoin.png
+
+#begin RebellionSquad.ttf
+/copy:RebellionSquad.ttf
 
 #begin textChooseLevel.spritefont
 /importer:FontDescriptionImporter

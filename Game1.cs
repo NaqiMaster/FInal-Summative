@@ -17,9 +17,9 @@ namespace FInal_Summative
         List<Rectangle> barriers;
         List<Rectangle> coins;
         List<Texture2D> boyTexture;
-        Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits;
+        Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits, door;
         SpriteFont titleIntro, textChooseLevel, textLevel1, textCredits, textInstructions;
-        MouseState mouseState;
+        MouseState mouseState,prevMouseState;
 
         enum Screen
         {
@@ -61,6 +61,7 @@ namespace FInal_Summative
             btnLevel1 = new Rectangle(50, 100, 200, 300);
             btnLevel2 = new Rectangle(300, 100, 200, 300);
             btnLevel3 = new Rectangle(550, 100, 200, 300);
+            door = new Rectangle(50, 130, 50, 50);
 
 
 
@@ -87,6 +88,8 @@ namespace FInal_Summative
             level1Background = Content.Load<Texture2D>("whiteBackground");
             titleIntro = Content.Load<SpriteFont>("titleIntro");
             textChooseLevel = Content.Load<SpriteFont>("textChooseLevel");
+            textureDoor = Content.Load<Texture2D>("door");
+
 
             Texture2D cropTexture;
 
@@ -128,12 +131,14 @@ namespace FInal_Summative
 
         protected override void Update(GameTime gameTime)
         {
+
+            prevMouseState = mouseState;
             mouseState = Mouse.GetState();
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             if (screen == Screen.Intro)
             {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnLevelChoose.Contains(mouseState.X, mouseState.Y))
                     {
@@ -150,7 +155,7 @@ namespace FInal_Summative
             }   }
             if (screen == Screen.ChooseLevel)
             {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnLevel1.Contains(mouseState.X, mouseState.Y))
                     {
@@ -169,7 +174,7 @@ namespace FInal_Summative
 
             else if (screen == Screen.Level1)
             {
-                player.Update(gameTime, barriers, coins);
+                player.Update(gameTime, barriers, coins,door);
             }
 
 
@@ -274,6 +279,8 @@ namespace FInal_Summative
 
                 foreach (Rectangle coin in coins)
                     _spriteBatch.Draw(coinTexture, coin, Color.Purple);
+
+                _spriteBatch.Draw(textureDoor, door, Color.White);
             }
             else if (screen == Screen.ChooseLevel)
             {

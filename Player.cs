@@ -13,14 +13,13 @@ namespace FInal_Summative
     internal class Player
     {
         
-        Texture2D _textureDoor;
+        Texture2D door;
         private List<Texture2D> _boyTextures;
 
         private Rectangle _location;
 
         Vector2 _velocity;
         Vector2 _position;
-
         SpriteEffects _spriteEffect;
 
         private int playerIndex;
@@ -40,7 +39,7 @@ namespace FInal_Summative
             _spriteEffect = SpriteEffects.None;
         }
 
-        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins)
+        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, Rectangle door)
         {
             playerIndex = 0;
 
@@ -134,7 +133,10 @@ namespace FInal_Summative
 
                     }
                 }
+            if (_location.Intersects(door))
+            {
 
+            }
 
 
 
