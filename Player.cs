@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,9 +19,9 @@ namespace FInal_Summative
 
         private Rectangle _location;
 
-        Vector2 _velocity;
-        Vector2 _position;
-        SpriteEffects _spriteEffect;
+        private Vector2 _velocity;
+        private Vector2 _position;
+        private SpriteEffects _spriteEffect;
 
         private int playerIndex;
 
@@ -35,7 +36,7 @@ namespace FInal_Summative
             _position = newPosition;
             hasJumped = true;
             _location = new Rectangle(newPosition.ToPoint(), new Point(15, 50));
-            _position = new Vector2(550, 200);
+            _position = new Vector2(0, 400);
             _spriteEffect = SpriteEffects.None;
         }
 
@@ -100,6 +101,8 @@ namespace FInal_Summative
                 }
             }
 
+            
+
             // Vertical Movement
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
@@ -133,19 +136,27 @@ namespace FInal_Summative
 
                     }
                 }
-            if (_location.Intersects(door))
-            {
-
-            }
 
 
 
         }
 
+        public void SetLocation(int x, int y)
+        {
+            _position.X = x;
+            _position.Y = y;
+        }
+
+
+        public Rectangle HitBox
+        {
+            get { return _location; }
+            set { _location = value; }  
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_boyTextures[playerIndex], _location, null, Color.Black, 0f, Vector2.Zero, _spriteEffect, 1f);
-          //  spriteBatch.Draw(_textureDoor, new Vector2(50, 200),Color.White);
         }
 }
 }

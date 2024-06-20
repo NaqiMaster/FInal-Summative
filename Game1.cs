@@ -75,7 +75,6 @@ namespace FInal_Summative
             coinsAdd();
 
             barriers = new List<Rectangle>();
-            barriersAdd();
         }
 
         protected override void LoadContent()
@@ -153,7 +152,7 @@ namespace FInal_Summative
                         screen = Screen.Instructions;
                     }
             }   }
-            if (screen == Screen.ChooseLevel)
+            else if (screen == Screen.ChooseLevel)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
@@ -175,7 +174,32 @@ namespace FInal_Summative
             else if (screen == Screen.Level1)
             {
                 player.Update(gameTime, barriers, coins,door);
+
+                if (coins.Count == 0)
+                {
+                    if (door.Contains(player.HitBox))
+                    {
+                        screen = Screen.Level2;
+                        player.SetLocation(0, 400);
+
+                    }
+                }
+
             }
+            else if (screen == Screen.Level2)
+            {
+                player.SetLocation(300, 300);
+                player.Update(gameTime, barriers, coins, door);
+
+                if (coins.Count == 0)
+                {
+                    if (door.Contains(player.HitBox))
+                    {
+                        screen = Screen.Level3;
+                    }
+                }
+            }
+
 
 
 
@@ -197,20 +221,14 @@ namespace FInal_Summative
 
         }
 
-        public void barriersAdd()
+        public void barriersLevel1()
         {
-            //Parkour Part
             barriers.Add(new Rectangle(500, 200, 20, 10));
             barriers.Add(new Rectangle(550, 180, 10, 10));
             barriers.Add(new Rectangle(600, 150, 10, 10));
             barriers.Add(new Rectangle(730, 110, 10, 10));
             barriers.Add(new Rectangle(790, 50, 10, 10));
-            barriers.Add(new Rectangle(500,50,200,10));
-
-
-
-
-
+            barriers.Add(new Rectangle(500, 50, 200, 10));
             //4th Floor
             barriers.Add(new Rectangle(0, 180, 500, 10));
 
@@ -218,29 +236,49 @@ namespace FInal_Summative
             barriers.Add(new Rectangle(0, 250, 50, 10));
             barriers.Add(new Rectangle(72, 250, 622, 10));
             barriers.Add(new Rectangle(770, 250, 150, 10));
-            barriers.Add(new Rectangle(500,50, 10, 210));
-
-
-
+            barriers.Add(new Rectangle(500, 50, 10, 210));
             //Block in between 2nd and 3rd floor
             barriers.Add(new Rectangle(50, 310, 22, 10));
             barriers.Add(new Rectangle(770, 310, 30, 10));
-
-
             //2nd Floor
-            barriers.Add(new Rectangle(0, 370,700,10));
-
+            barriers.Add(new Rectangle(0, 370, 700, 10));
             //Box on Floor
             barriers.Add(new Rectangle(780, 430, 20, 20));
-
             //Outline
             barriers.Add(new Rectangle(0, 450, 800, 10));//Bottom
             barriers.Add(new Rectangle(0, 0, 0, 460));//LeftSide
-            barriers.Add(new Rectangle(800, 0,0, 460));//RightSide
-            barriers.Add(new Rectangle(0, 0, 800,0));//Top
-
-
+            barriers.Add(new Rectangle(800, 0, 0, 460));//RightSide
+            barriers.Add(new Rectangle(0, 0, 800, 0));//Top
         }
+
+        public void barriersLevel2()
+        {
+            //4th Floor
+            barriers.Add(new Rectangle(0, 180, 500, 10));
+
+            //3rd Floor
+            barriers.Add(new Rectangle(0, 250, 50, 10));
+            barriers.Add(new Rectangle(72, 250, 622, 10));
+            barriers.Add(new Rectangle(770, 250, 150, 10));
+            barriers.Add(new Rectangle(500, 50, 10, 210));
+            //Block in between 2nd and 3rd floor
+            barriers.Add(new Rectangle(50, 310, 22, 10));
+            barriers.Add(new Rectangle(770, 310, 30, 10));
+            //2nd Floor
+            barriers.Add(new Rectangle(0, 370, 700, 10));
+            //Box on Floor
+            barriers.Add(new Rectangle(780, 430, 20, 20));
+            //Outline
+            barriers.Add(new Rectangle(0, 450, 800, 10));//Bottom
+            barriers.Add(new Rectangle(0, 0, 0, 460));//LeftSide
+            barriers.Add(new Rectangle(800, 0, 0, 460));//RightSide
+            barriers.Add(new Rectangle(0, 0, 800, 0));//Top
+        }
+        public void ClearBarriers()
+        {
+            barriers.Clear();
+        }
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -272,6 +310,8 @@ namespace FInal_Summative
             else if (screen == Screen.Level1)
             {
                 _spriteBatch.Draw(level1Background, window, Color.White);
+                barriersLevel1();
+               
                 player.Draw(_spriteBatch);
 
                 foreach (Rectangle barrier in barriers)
@@ -279,8 +319,21 @@ namespace FInal_Summative
 
                 foreach (Rectangle coin in coins)
                     _spriteBatch.Draw(coinTexture, coin, Color.Purple);
+                if (coins.Count == 0)
+                {
+                    _spriteBatch.Draw(textureDoor, door, Color.White);
+                }
+            }
+            else if (screen == Screen.Level2)
+            {
+                ClearBarriers();
+                barriersLevel2();
+                _spriteBatch.Draw(level1Background, window, Color.White);
 
-                _spriteBatch.Draw(textureDoor, door, Color.White);
+                foreach (Rectangle barrier in barriers)
+                    _spriteBatch.Draw(barrierTexture, barrier, Color.Black);
+
+                player.Draw(_spriteBatch);
             }
             else if (screen == Screen.ChooseLevel)
             {
