@@ -35,7 +35,7 @@ namespace FInal_Summative
             _position = newPosition;
             hasJumped = true;
             _location = new Rectangle(newPosition.ToPoint(), new Point(15, 50));
-            _position = new Vector2(650,100);
+            _position = new Vector2(0,400);
             _spriteEffect = SpriteEffects.None;
         }
 
