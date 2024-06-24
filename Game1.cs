@@ -13,9 +13,10 @@ namespace FInal_Summative
         private SpriteBatch _spriteBatch;
 
         Player player;
-        Texture2D barrierTexture, coinTexture, fireboySpritesheet, introBackground, level1Background, textureDoor;
+        Texture2D barrierTexture,lavaTexture, coinTexture, fireboySpritesheet, introBackground, level1Background, textureDoor;
         List<Rectangle> barriers;
         List<Rectangle> coins;
+        List<Rectangle> lava;
         List<Texture2D> boyTexture;
         Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits, door;
         SpriteFont titleIntro, textChooseLevel, textLevel1, textCredits, textInstructions;
@@ -68,8 +69,8 @@ namespace FInal_Summative
 
             boyTexture = new List<Texture2D>();
             base.Initialize();
-           
-            
+
+            lava = new List<Rectangle>();
 
             coins = new List<Rectangle>();
             coinsAdd();
@@ -88,6 +89,8 @@ namespace FInal_Summative
             titleIntro = Content.Load<SpriteFont>("titleIntro");
             textChooseLevel = Content.Load<SpriteFont>("textChooseLevel");
             textureDoor = Content.Load<Texture2D>("door");
+            textInstructions = Content.Load<SpriteFont>("textInstructions");
+            lavaTexture = Content.Load<Texture2D>("lava");
 
 
             Texture2D cropTexture;
@@ -159,10 +162,18 @@ namespace FInal_Summative
                     if (btnLevel1.Contains(mouseState.X, mouseState.Y))
                     {
                         screen = Screen.Level1;
+                        ClearBarriers();
+                        barriersLevel1();
+                        lavaLevel1();
                     }
                     else if (btnLevel2.Contains(mouseState.X, mouseState.Y))
                     {
                         screen = Screen.Level2;
+                        ClearBarriers();
+                        barriersLevel2();
+                        player.SetLocation(0, 400);
+
+
                     }
                     if (btnLevel3.Contains(mouseState.X, mouseState.Y))
                     {
@@ -173,7 +184,7 @@ namespace FInal_Summative
 
             else if (screen == Screen.Level1)
             {
-                player.Update(gameTime, barriers, coins,door);
+                player.Update(gameTime, barriers, coins,door,lava);
 
                 if (coins.Count == 0)
                 {
@@ -182,14 +193,14 @@ namespace FInal_Summative
                         screen = Screen.Level2;
                         player.SetLocation(0, 400);
 
+
                     }
                 }
 
             }
             else if (screen == Screen.Level2)
             {
-                player.SetLocation(300, 300);
-                player.Update(gameTime, barriers, coins, door);
+                player.Update(gameTime, barriers, coins, door,lava);
 
                 if (coins.Count == 0)
                 {
@@ -198,6 +209,14 @@ namespace FInal_Summative
                         screen = Screen.Level3;
                     }
                 }
+            }
+            else if (screen == Screen.Level3)
+            {
+
+            }
+            else if (screen == Screen.Instructions)
+            {
+
             }
 
 
@@ -216,6 +235,26 @@ namespace FInal_Summative
             coins.Add(new Rectangle(570, 330, 20, 20));//5th
             coins.Add(new Rectangle(320, 330, 20, 20));//6th
             coins.Add(new Rectangle(10, 210, 20, 20));//6th
+
+
+
+        }
+
+        public void lavaLevel1()
+        {
+           lava.Add(new Rectangle(195, 450, 30, 10));
+           lava.Add(new Rectangle(445, 450, 30, 10));
+           lava.Add(new Rectangle(610, 370, 70, 10));
+           lava.Add(new Rectangle(0, 370, 70, 10));
+           lava.Add(new Rectangle(110, 370, 80, 10));
+
+            lava.Add(new Rectangle(200, 180, 20, 10));
+            lava.Add(new Rectangle(240, 180, 20, 10)); 
+            lava.Add(new Rectangle(280, 180, 20, 10));
+            lava.Add(new Rectangle(320, 180, 20, 10));
+
+
+
 
 
 
@@ -309,13 +348,14 @@ namespace FInal_Summative
             }
             else if (screen == Screen.Level1)
             {
-                _spriteBatch.Draw(level1Background, window, Color.White);
-                barriersLevel1();
-               
+                _spriteBatch.Draw(level1Background, window, Color.White);               
                 player.Draw(_spriteBatch);
 
                 foreach (Rectangle barrier in barriers)
                     _spriteBatch.Draw(barrierTexture, barrier, Color.Black);
+
+                foreach (Rectangle lavaRect in lava)
+                    _spriteBatch.Draw(lavaTexture, lavaRect, Color.White);
 
                 foreach (Rectangle coin in coins)
                     _spriteBatch.Draw(coinTexture, coin, Color.Purple);
@@ -326,8 +366,6 @@ namespace FInal_Summative
             }
             else if (screen == Screen.Level2)
             {
-                ClearBarriers();
-                barriersLevel2();
                 _spriteBatch.Draw(level1Background, window, Color.White);
 
                 foreach (Rectangle barrier in barriers)
@@ -355,7 +393,17 @@ namespace FInal_Summative
 
 
             }
+            else if (screen == Screen.Instructions)
+            {
+                _spriteBatch.Draw(level1Background, window, Color.White);
+                _spriteBatch.DrawString(textInstructions,"INSTRUCTIONS",new Vector2(0,0), Color.Black);
+            }
+            else if (screen == Screen.Credits)
+            {
+                _spriteBatch.Draw(level1Background, window, Color.White);
+                _spriteBatch.DrawString(textInstructions, "CREDIT", new Vector2(0, 0), Color.Black);
 
+            }
 
             _spriteBatch.End();
 

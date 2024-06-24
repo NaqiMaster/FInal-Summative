@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -14,7 +15,6 @@ namespace FInal_Summative
     internal class Player
     {
         
-        Texture2D door;
         private List<Texture2D> _boyTextures;
 
         private Rectangle _location;
@@ -29,18 +29,17 @@ namespace FInal_Summative
 
 
 
-        public Player(List<Texture2D> boyTexture, Vector2 newPosition)//, Texture2D textureDoor
+        public Player(List<Texture2D> boyTexture, Vector2 newPosition)
         {
             _boyTextures = boyTexture;
-        //    _textureDoor = textureDoor;
             _position = newPosition;
             hasJumped = true;
             _location = new Rectangle(newPosition.ToPoint(), new Point(15, 50));
-            _position = new Vector2(0, 400);
+            _position = new Vector2(650,100);
             _spriteEffect = SpriteEffects.None;
         }
 
-        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, Rectangle door)
+        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, Rectangle door, List<Rectangle> lava)
         {
             playerIndex = 0;
 
@@ -101,7 +100,8 @@ namespace FInal_Summative
                 }
             }
 
-            
+
+
 
             // Vertical Movement
 
@@ -114,6 +114,23 @@ namespace FInal_Summative
 
                 _position.Y += _velocity.Y;
             _location.Location = _position.ToPoint();
+
+            foreach (Rectangle lavaRect in lava)
+                if (_location.Intersects(lavaRect))
+                {
+                    if (_velocity.Y < 0)
+                    {
+
+                    }
+                    else
+                    {
+                        _position.X = 0;
+                        _position.Y = 400;
+                        _location.Location = _position.ToPoint();
+
+                    }
+
+                }
 
             foreach (Rectangle barrier in barriers)
                 if (_location.Intersects(barrier))
@@ -136,7 +153,9 @@ namespace FInal_Summative
 
                     }
                 }
+            
 
+            Debug.WriteLine(_location.X + "");
 
 
         }
