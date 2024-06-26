@@ -39,7 +39,7 @@ namespace FInal_Summative
             _spriteEffect = SpriteEffects.None;
         }
 
-        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, Rectangle door, List<Rectangle> lava)
+        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, List <Rectangle> door, List <Rectangle> lava, List <Rectangle> teleporters)
         {
             playerIndex = 0;
 
@@ -124,8 +124,7 @@ namespace FInal_Summative
                     }
                     else
                     {
-                        _position.X = 0;
-                        _position.Y = 400;
+                        SetLocation(0,400);
                         _location.Location = _position.ToPoint();
 
                     }
