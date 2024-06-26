@@ -37,6 +37,24 @@
 /processorParam:TextureFormat=Color
 /build:boySprite1.png
 
+#begin collectCoin.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:collectCoin.wav
+
+#begin fireBoy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:fireBoy.png
+
 #begin GoldCoin.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,6 +66,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GoldCoin.png
+
+#begin introSong.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:introSong.wav
+
+#begin jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:jump.wav
 
 #begin lava.jpg
 /importer:TextureImporter
@@ -110,6 +140,12 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:titleIntro.spritefont
+
+#begin touchingLava.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:touchingLava.wav
 
 #begin whiteBackground.jpg
 /importer:TextureImporter

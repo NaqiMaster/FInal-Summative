@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -22,7 +23,6 @@ namespace FInal_Summative
         private Vector2 _velocity;
         private Vector2 _position;
         private SpriteEffects _spriteEffect;
-
         private int playerIndex;
 
         bool hasJumped;
@@ -38,8 +38,7 @@ namespace FInal_Summative
             _position = new Vector2(0,400);
             _spriteEffect = SpriteEffects.None;
         }
-
-        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, List <Rectangle> door, List <Rectangle> lava, List <Rectangle> teleporters)
+        public void Update(GameTime gameTime, List<Rectangle> barriers, List <Rectangle> coins, List <Rectangle> door, List <Rectangle> lava, List <Rectangle> teleporters, SoundEffect fire, SoundEffect jump, SoundEffect collectCoin)
         {
             playerIndex = 0;
 
@@ -95,6 +94,7 @@ namespace FInal_Summative
             {                 
                 if (_location.Intersects(coins[i]))
                 {
+                    collectCoin.Play();
                     coins.RemoveAt(i);
                     i--;
                 }
@@ -107,6 +107,7 @@ namespace FInal_Summative
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
             {
+                jump.Play();
                 _velocity.Y = -5f;
                 hasJumped = true;
             }
@@ -124,6 +125,7 @@ namespace FInal_Summative
                     }
                     else
                     {
+                        fire.Play();
                         SetLocation(0,400);
                         _location.Location = _position.ToPoint();
 

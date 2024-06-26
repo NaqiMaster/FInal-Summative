@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace FInal_Summative
         private SpriteBatch _spriteBatch;
 
         Player player;
-        Texture2D barrierTexture,lavaTexture, coinTexture,
+        Texture2D barrierTexture,lavaTexture, coinTexture,gamePic,
             teleporterTexture,fireboySpritesheet, introBackground, level1Background, textureDoor;
         List<Rectangle> barriers;
         List<Rectangle> coins;
@@ -22,7 +23,9 @@ namespace FInal_Summative
         List<Rectangle> teleporters;
         List<Rectangle> door;
         List<Texture2D> boyTexture;
-        Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits,btnExit;
+        SoundEffect introSong, fire, collectCoin,jump;
+        SoundEffectInstance introSongInstance;
+        Rectangle window, playerr, btnInstructions, btnLevelChoose, btnLevel1,btnLevel2,btnLevel3, btnCredits,btnExit,gameRect;
         SpriteFont titleIntro, textChooseLevel, textLevel1, textCredits, textInstructions;
         MouseState mouseState,prevMouseState;
         bool removedBarrier;
@@ -69,6 +72,7 @@ namespace FInal_Summative
             btnLevel2 = new Rectangle(300, 100, 200, 300);
             btnLevel3 = new Rectangle(550, 100, 200, 300);
             btnExit = new Rectangle(10, 10, 40, 20);
+            gameRect = new Rectangle(450, 150, 300, 300);
 
 
 
@@ -99,8 +103,15 @@ namespace FInal_Summative
             textChooseLevel = Content.Load<SpriteFont>("textChooseLevel");
             textureDoor = Content.Load<Texture2D>("door");
             textInstructions = Content.Load<SpriteFont>("textInstructions");
+            textCredits = Content.Load<SpriteFont>("textCredits");
             lavaTexture = Content.Load<Texture2D>("lava");
             teleporterTexture = Content.Load<Texture2D>("purpleButton");
+            introSong = Content.Load<SoundEffect>("introSong");
+            introSongInstance = introSong.CreateInstance();
+            fire = Content.Load<SoundEffect>("touchingLava");
+            collectCoin = Content.Load<SoundEffect>("collectCoin");
+            jump = Content.Load<SoundEffect>("jump");
+            gamePic = Content.Load<Texture2D>("fireBoy");
 
 
             Texture2D cropTexture;
@@ -144,7 +155,7 @@ namespace FInal_Summative
         protected override void Update(GameTime gameTime)
         {
 
-            this.Window.Title = "BoxBoy & BoxGirl" + barriers.Count;
+            this.Window.Title = "BoxBoy & BoxGirl" + coins.Count;
 
             prevMouseState = mouseState;
             mouseState = Mouse.GetState();
@@ -152,6 +163,7 @@ namespace FInal_Summative
                 Exit();
             if (screen == Screen.Intro)
             {
+                introSongInstance.Play();
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnLevelChoose.Contains(mouseState.X, mouseState.Y))
@@ -171,6 +183,7 @@ namespace FInal_Summative
             }   }
             else if (screen == Screen.ChooseLevel)
             {
+                introSongInstance.Play();
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnLevel1.Contains(mouseState.X, mouseState.Y))
@@ -181,6 +194,8 @@ namespace FInal_Summative
                         lavaLevel1();
                         coinsLevel1();
                         doorLevel1();
+                        player.SetLocation(0, 400);
+
                     }
                     else if (btnLevel2.Contains(mouseState.X, mouseState.Y))
                     {
@@ -209,6 +224,7 @@ namespace FInal_Summative
 
             else if (screen == Screen.Level1)
             {
+                introSongInstance.Pause();
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnExit.Contains(mouseState.X, mouseState.Y))
@@ -217,7 +233,7 @@ namespace FInal_Summative
                     }
                 }
 
-                player.Update(gameTime,barriers,coins,door,lava,teleporters);
+                player.Update(gameTime,barriers,coins,door,lava,teleporters,fire,jump,collectCoin);
 
                 if (coins.Count == 0)
                 {
@@ -237,6 +253,7 @@ namespace FInal_Summative
             }
             else if (screen == Screen.Level2)
             {
+                introSongInstance.Pause();
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnExit.Contains(mouseState.X, mouseState.Y))
@@ -245,7 +262,7 @@ namespace FInal_Summative
                     }
                 }
 
-                player.Update(gameTime, barriers, coins, door, lava, teleporters);
+                player.Update(gameTime, barriers, coins, door, lava, teleporters,fire,jump,collectCoin);
 
                 if (coins.Count == 0)
                 {
@@ -292,6 +309,7 @@ namespace FInal_Summative
             }
             else if (screen == Screen.Level3)
             {
+                introSongInstance.Pause();
                 if (mouseState.LeftButton == ButtonState.Pressed && prevMouseState.LeftButton == ButtonState.Released)
                 {
                     if (btnExit.Contains(mouseState.X, mouseState.Y))
@@ -363,7 +381,6 @@ namespace FInal_Summative
 
         public void barriersLevel1()
         {
-            barriers.Add(new Rectangle(200, 150, 120, 10));
             barriers.Add(new Rectangle(500, 200, 20, 10));
             barriers.Add(new Rectangle(550, 180, 10, 10));
             barriers.Add(new Rectangle(600, 150, 10, 10));
@@ -471,10 +488,10 @@ namespace FInal_Summative
                 _spriteBatch.Draw(introBackground, btnLevelChoose, Color.White);
 
 
-                _spriteBatch.DrawString(textChooseLevel,"CREDITS",new Vector2(560,300),Color.Black);
-                _spriteBatch.DrawString(textChooseLevel, "RULES", new Vector2(570, 380), Color.Black);
-                _spriteBatch.DrawString(textChooseLevel, "CHOOSE", new Vector2(75, 320), Color.Black);
-                _spriteBatch.DrawString(textChooseLevel, "LEVEL", new Vector2(80, 360), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel,"C R E D I T S",new Vector2(542,300),Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "R U L E S", new Vector2(565, 380), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "C H O O S E", new Vector2(52, 320), Color.Black);
+                _spriteBatch.DrawString(textChooseLevel, "L E V E L", new Vector2(70, 360), Color.Black);
             }
             else if (screen == Screen.Level1)
             {
@@ -549,19 +566,17 @@ namespace FInal_Summative
                 _spriteBatch.DrawString(textInstructions, "- Purple button is a teleporter", new Vector2(5, 250), Color.Black);
                 _spriteBatch.DrawString(textInstructions, "- Touching Lava will KILL you", new Vector2(5, 300), Color.Black);
                 _spriteBatch.DrawString(textInstructions, "- Click Red button to return to home", new Vector2(5, 350), Color.Black);
-
-
-
-
-
-
+                _spriteBatch.DrawString(textInstructions, "- RUNNING OFF A PLATFORM WILL KEEP YOUR JUMP IN THE AIR", new Vector2(5, 400), Color.Black);
 
                 _spriteBatch.Draw(level1Background, btnExit, Color.Red);
             }
             else if (screen == Screen.Credits)
             {
                 _spriteBatch.Draw(level1Background, window, Color.White);
-                _spriteBatch.DrawString(textInstructions, "CREDIT", new Vector2(0, 0), Color.Black);
+                _spriteBatch.DrawString(titleIntro, "CREDITS", new Vector2(250, 0), Color.Black);
+                _spriteBatch.DrawString(textCredits, "Inspired by Fireboy & Watergirl", new Vector2(5, 100), Color.Black);
+                _spriteBatch.DrawString(textCredits, "Created by Naqi Master", new Vector2(5, 150), Color.Black);
+                _spriteBatch.Draw(gamePic,gameRect, Color.White);
 
                 _spriteBatch.Draw(level1Background, btnExit, Color.Red);
             }
